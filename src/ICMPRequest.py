@@ -2,16 +2,12 @@ from random import choices
 
 
 def _random_byte_message(size):
-    sequence = choices(
-        b'abcdefghijklmnopqrstuvwxyz'
-        b'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-        b'1234567890', k=size)
+    sequence = choices(b"abcdefghijklmnopqrstuvwxyz" b"ABCDEFGHIJKLMNOPQRSTUVWXYZ" b"1234567890", k=size)
     return bytes(sequence)
 
 
 class ICMPRequest:
-    __slots__ = '_destination', '_id', '_sequence', '_payload', \
-                '_payload_size', '_ttl', '_time'
+    __slots__ = "_destination", "_id", "_sequence", "_payload", "_payload_size", "_ttl", "_time"
 
     def __init__(self, destination, id, sequence, payload=None, payload_size=56, ttl=64):
 
@@ -19,8 +15,8 @@ class ICMPRequest:
             payload_size = len(payload)
 
         self._destination = destination
-        self._id = id & 0xffff
-        self._sequence = sequence & 0xffff
+        self._id = id & 0xFFFF
+        self._sequence = sequence & 0xFFFF
         self._payload = payload
         self._payload_size = payload_size
         self._ttl = ttl

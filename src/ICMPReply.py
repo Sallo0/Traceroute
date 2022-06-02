@@ -1,9 +1,7 @@
 class ICMPReply:
-    __slots__ = '_source', '_family', '_id', '_sequence', '_type', \
-                '_code', '_bytes_received', '_time'
+    __slots__ = "_source", "_family", "_id", "_sequence", "_type", "_code", "_bytes_received", "_time"
 
-    def __init__(self, source, family, id, sequence, type, code,
-            bytes_received, time):
+    def __init__(self, source, family, id, sequence, type, code, bytes_received, time):
 
         self._source = source
         self._family = family
@@ -22,7 +20,7 @@ class ICMPReply:
             raise TimeoutError
 
         if self._type != 0:
-            message = f'Error type: {self._type}, code: {self._code}'
+            message = f"Error type: {self._type}, code: {self._code}"
             raise OSError(message)
 
     @property
