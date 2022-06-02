@@ -163,15 +163,15 @@ class testingTraceroute(unittest.TestCase):
 
 class WrongAddressTests(unittest.TestCase):
     def test_correct_address(self):
-        Traceroute.check_address_for_correctness("8.8.8.8")
+        Traceroute.check_address_for_correctness("8.8.8.8", 0)
         self.assertTrue(True)
 
     def test_wrong_diapason(self):
-        self.assertRaises(WrongAddressException, Traceroute.check_address_for_correctness, "256.8.8.8")
-        self.assertRaises(WrongAddressException, Traceroute.check_address_for_correctness, "8.0.8.8")
+        self.assertRaises(WrongAddressException, Traceroute.check_address_for_correctness, "256.8.8.8", 0)
+        self.assertRaises(WrongAddressException, Traceroute.check_address_for_correctness, "8.0.8.8", 0)
 
     def test_wrong_length(self):
-        self.assertRaises(WrongAddressException, Traceroute.check_address_for_correctness, "8.8.8")
+        self.assertRaises(WrongAddressException, Traceroute.check_address_for_correctness, "8.8.8", 0)
 
     def test_wrong_format(self):
-        self.assertRaises(WrongAddressException, Traceroute.check_address_for_correctness, "8.8.text.8")
+        self.assertRaises(WrongAddressException, Traceroute.check_address_for_correctness, "8.8.text.8", 0)
