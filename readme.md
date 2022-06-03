@@ -1,17 +1,18 @@
 # Traceroute
-ICMP and TCP SYN implementation of traceroute on python.
+ICMP and TCP implementation of traceroute on python.
 # Usage
 
 ```sh
-python [Flags] main.py IPV4_address
+python main.py [Flags] IPV4_address
 ```
 
 # Result  
-> 1	ipv4_address1     	time  ms  
-> 2 ipv4_address2	      time  ms  
-> 3	*           	*            Превышен интервал ожидания для запрос 
+```
+1   ipv4_address1       time  ms  
+2   ipv4_address2       time  ms  
+3   *                   *       Превышен интервал ожидания для запрос 
 ...
-
+```
 # Flags
 | Flag                             | Description                                         |
 |----------------------------------|-----------------------------------------------------|
