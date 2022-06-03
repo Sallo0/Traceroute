@@ -5,8 +5,6 @@ from time import sleep
 
 from scapy.all import socket
 
-from ICMPRequest import ICMPRequest
-from ICMPsocket import ICMPv4Socket
 from TCPRequest import TCPRequest
 from WrongAddressException import WrongAddressException
 
@@ -51,21 +49,15 @@ def _format_parsed_reply(ttl, parsed_reply):
     return formatted_string
 
 
-def _ping(address, count=4, interval_s=1, timeout_s=2, time_to_live=30, payload_size=64, isTCP=False, port=0):
-    id = _unique_identifier()
+def _ping(address, count=4, interval_s=1, timeout_s=2, time_to_live=30, payload_size=64, port=0):
     packets_sent = 0
     replies = []
     for sequence in range(count):
         if sequence > 0:
             sleep(interval_s)
-        if isTCP:
-            reply = _tcp_ping(address, time_to_live, port, payload_size, timeout_s)
-            if reply is not None:
-                replies.append(reply)
-        else:
-            reply = _icmp_ping(address, id, sequence, time_to_live, payload_size, timeout_s)
-            if reply is not None:
-                replies.append(reply)
+        reply = _tcp_ping(address, time_to_live, port, payload_size, timeout_s)
+        if reply is not None:
+            replies.append(reply)
         packets_sent += 1
     return packets_sent, replies
 
@@ -78,21 +70,7 @@ def _tcp_ping(address, time_to_live, port, payload_size, timeout):
         return round_trip_time, reply.src
 
 
-def _icmp_ping(address, id, sequence, time_to_live, payload_size, timeout):
-    request = ICMPRequest(destination=address, id=id, sequence=sequence, ttl=time_to_live, payload_size=payload_size)
-    with ICMPv4Socket() as sock:
-        try:
-            sock.send(request)
-            reply = sock.receive(request, timeout)
-            round_trip_time = (reply.time - request.time) * 1000
-            return round_trip_time, reply.source
-        except socket.timeout:
-            pass
-        except TimeoutError:
-            pass
-
-
-def traceroute(address, requests, wait_before_send_s, wait_timeout_s, max_time_to_live, data_size, TCP, port):
+def traceroute(address, requests, wait_before_send_s, wait_timeout_s, max_time_to_live, data_size, port):
     check_address_for_correctness(address, port)
     check_input_for_correctness(requests, wait_before_send_s, wait_timeout_s, max_time_to_live, data_size)
     host_reached = False
@@ -105,7 +83,6 @@ def traceroute(address, requests, wait_before_send_s, wait_timeout_s, max_time_t
             timeout_s=wait_timeout_s,
             time_to_live=ttl,
             payload_size=data_size,
-            isTCP=TCP,
             port=port,
         )
         parsed_reply, host_reached = _parse_ping_reply(reply, address)

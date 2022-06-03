@@ -8,7 +8,6 @@ from scapy.sendrecv import sr1
 
 
 class TCPRequest:
-
     def __init__(self, address, time_to_live, port, size, timeout):
         self._address = address
         self._time_to_live = time_to_live

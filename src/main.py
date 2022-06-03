@@ -21,16 +21,16 @@ def main():
     argument_parser.add_argument(
         "-d", "--datasize", type=int, default=40, help="Size of request packet (bytes). Default is 40"
     )
-    argument_parser.add_argument("-sT", "--tcp", action="store_true", help="Traceroute via TCP")
+
     argument_parser.add_argument("-p", "--port", type=int, default=0, help="Port for TCP request")
 
     args = argument_parser.parse_args()
     try:
         Traceroute.traceroute(
-            args.address, args.requests, args.wait, args.timeout, args.maxttl, args.datasize, args.tcp, args.port
+            args.address, args.requests, args.wait, args.timeout, args.maxttl, args.datasize, args.port
         )
     except PermissionError as e:
-        print(e, f"Do you want sudo python main.py {args.address}?")
+        print(e, "Permission denied")
 
 
 if __name__ == "__main__":
