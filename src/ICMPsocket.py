@@ -6,8 +6,6 @@ from ICMPReply import ICMPReply
 
 
 class ICMPv4Socket:
-    __slots__ = "_sock", "_address", "_port"
-
     _IP_VERSION = 4
     _ICMP_HEADER_OFFSET = 20
     _ICMP_HEADER_REAL_OFFSET = 20
@@ -36,7 +34,8 @@ class ICMPv4Socket:
     def _set_ttl(self, ttl):
         self._sock.setsockopt(socket.IPPROTO_IP, socket.IP_TTL, ttl)
 
-    def _checksum(self, data):
+    @staticmethod
+    def _checksum(data):
         sum = 0
         data += b"\x00"
         for i in range(0, len(data) - 1, 2):
@@ -56,10 +55,10 @@ class ICMPv4Socket:
         bytes_received = len(packet) - self._ICMP_HEADER_OFFSET
         if len(packet) < self._ICMP_CHECKSUM_OFFSET:
             return None
-        type, code = unpack("!2B", packet[self._ICMP_HEADER_OFFSET : self._ICMP_CHECKSUM_OFFSET])
+        type, code = unpack("!2B", packet[self._ICMP_HEADER_OFFSET: self._ICMP_CHECKSUM_OFFSET])
         if type != self._ICMP_ECHO_REPLY:
-            packet = packet[self._ICMP_PAYLOAD_OFFSET :]
-        id, sequence = unpack("!2H", packet[self._ICMP_ID_OFFSET : self._ICMP_PAYLOAD_OFFSET])
+            packet = packet[self._ICMP_PAYLOAD_OFFSET:]
+        id, sequence = unpack("!2H", packet[self._ICMP_ID_OFFSET: self._ICMP_PAYLOAD_OFFSET])
 
         return ICMPReply(
             source=source,
@@ -95,17 +94,3 @@ class ICMPv4Socket:
         if self._sock:
             self._sock.close()
             self._sock = None
-
-
-#   Echo Request and Echo Reply messages                     RFC 4443
-#
-#    0                   1                   2                   3
-#    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-#   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-#   |     Type      |     Code      |           Checksum            |
-#   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-#   |           Identifier          |        Sequence Number        |
-#   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-#   |     Data ...
-#   +-+-+-+-+-
-#

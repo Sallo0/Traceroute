@@ -1,5 +1,4 @@
 class ICMPReply:
-    __slots__ = "_source", "_family", "_id", "_sequence", "_type", "_code", "_bytes_received", "_time"
 
     def __init__(self, source, family, id, sequence, type, code, bytes_received, time):
 
