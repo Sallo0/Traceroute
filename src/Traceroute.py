@@ -3,8 +3,6 @@ from os import getpid
 from threading import Lock
 from time import sleep
 
-from scapy.all import socket
-
 from TCPRequest import TCPRequest
 from WrongAddressException import WrongAddressException
 
