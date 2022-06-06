@@ -8,7 +8,6 @@ from scapy.sendrecv import sr1
 
 
 class TCPRequest:
-
     def __init__(self, address, time_to_live, port, size, timeout):
         self._address = address
         self._time_to_live = time_to_live
@@ -20,7 +19,12 @@ class TCPRequest:
 
     @staticmethod
     def _random_byte_message(size):
-        sequence = choices(b"abcdefghijklmnopqrstuvwxyz" b"ABCDEFGHIJKLMNOPQRSTUVWXYZ" b"1234567890", k=size)
+        sequence = choices(
+            b"abcdefghijklmnopqrstuvwxyz"
+            b"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            b"1234567890",
+            k=size,
+        )
         return bytes(sequence)
 
     def _build_tcp_request(self):

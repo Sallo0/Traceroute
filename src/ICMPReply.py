@@ -1,6 +1,7 @@
 class ICMPReply:
-
-    def __init__(self, source, family, id, sequence, type, code, bytes_received, time):
+    def __init__(
+        self, source, family, id, sequence, type, code, bytes_received, time
+    ):
 
         self._source = source
         self._family = family

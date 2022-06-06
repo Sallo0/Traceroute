@@ -2,8 +2,9 @@ from random import choices
 
 
 class ICMPRequest:
-
-    def __init__(self, destination, id, sequence, payload=None, payload_size=56, ttl=64):
+    def __init__(
+        self, destination, id, sequence, payload=None, payload_size=56, ttl=64
+    ):
         if payload:
             payload_size = len(payload)
 
@@ -17,7 +18,12 @@ class ICMPRequest:
 
     @staticmethod
     def _random_byte_message(size):
-        sequence = choices(b"abcdefghijklmnopqrstuvwxyz" b"ABCDEFGHIJKLMNOPQRSTUVWXYZ" b"1234567890", k=size)
+        sequence = choices(
+            b"abcdefghijklmnopqrstuvwxyz"
+            b"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            b"1234567890",
+            k=size,
+        )
         return bytes(sequence)
 
     @property

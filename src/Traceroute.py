@@ -32,7 +32,9 @@ def _parse_ping_reply(reply, target_address):
         sum_times[pair[1]] += pair[0]
     mean_times = {}
     for ip in sum_times.keys():
-        mean_times[ip] = float("{:.2f}".format(sum_times[ip] / routes_count[ip]))
+        mean_times[ip] = float(
+            "{:.2f}".format(sum_times[ip] / routes_count[ip])
+        )
         if mean_times[ip] < 1:
             mean_times[ip] = "<1"
         else:
@@ -44,14 +46,25 @@ def _parse_ping_reply(reply, target_address):
 
 def _format_parsed_reply(ttl, parsed_reply):
     if parsed_reply is None:
-        return "{ttl}\t{:12s}\t{:12s} Превышен интервал ожидания для запроса".format("*", "*", ttl=ttl)
+        return "{ttl}\t{:12s}\t{:12s} Превышен интервал ожидания для запроса".format(
+            "*", "*", ttl=ttl
+        )
     formatted_string = "{ttl}\t".format(ttl=ttl)
     for ip in parsed_reply:
         formatted_string += "{:12s}\t{:5s} ms\t".format(ip, parsed_reply[ip])
     return formatted_string
 
 
-def _ping(address, count=4, interval_s=1, timeout_s=2, time_to_live=30, payload_size=64, isTCP=False, port=0):
+def _ping(
+    address,
+    count=4,
+    interval_s=1,
+    timeout_s=2,
+    time_to_live=30,
+    payload_size=64,
+    isTCP=False,
+    port=0,
+):
     id = _unique_identifier()
     packets_sent = 0
     replies = []
@@ -59,11 +72,15 @@ def _ping(address, count=4, interval_s=1, timeout_s=2, time_to_live=30, payload_
         if sequence > 0:
             sleep(interval_s)
         if isTCP:
-            reply = _tcp_ping(address, time_to_live, port, payload_size, timeout_s)
+            reply = _tcp_ping(
+                address, time_to_live, port, payload_size, timeout_s
+            )
             if reply is not None:
                 replies.append(reply)
         else:
-            reply = _icmp_ping(address, id, sequence, time_to_live, payload_size, timeout_s)
+            reply = _icmp_ping(
+                address, id, sequence, time_to_live, payload_size, timeout_s
+            )
             if reply is not None:
                 replies.append(reply)
         packets_sent += 1
@@ -79,7 +96,13 @@ def _tcp_ping(address, time_to_live, port, payload_size, timeout):
 
 
 def _icmp_ping(address, id, sequence, time_to_live, payload_size, timeout):
-    request = ICMPRequest(destination=address, id=id, sequence=sequence, ttl=time_to_live, payload_size=payload_size)
+    request = ICMPRequest(
+        destination=address,
+        id=id,
+        sequence=sequence,
+        ttl=time_to_live,
+        payload_size=payload_size,
+    )
     with ICMPv4Socket() as sock:
         try:
             sock.send(request)
@@ -92,9 +115,24 @@ def _icmp_ping(address, id, sequence, time_to_live, payload_size, timeout):
             pass
 
 
-def traceroute(address, requests, wait_before_send_s, wait_timeout_s, max_time_to_live, data_size, TCP, port):
+def traceroute(
+    address,
+    requests,
+    wait_before_send_s,
+    wait_timeout_s,
+    max_time_to_live,
+    data_size,
+    TCP,
+    port,
+):
     check_address_for_correctness(address, port)
-    check_input_for_correctness(requests, wait_before_send_s, wait_timeout_s, max_time_to_live, data_size)
+    check_input_for_correctness(
+        requests,
+        wait_before_send_s,
+        wait_timeout_s,
+        max_time_to_live,
+        data_size,
+    )
     host_reached = False
     ttl = 1
     while not host_reached and ttl <= max_time_to_live:
@@ -113,7 +151,9 @@ def traceroute(address, requests, wait_before_send_s, wait_timeout_s, max_time_t
         ttl += 1
 
 
-def check_input_for_correctness(requests, wait_before, timeout, ttl, data_size):
+def check_input_for_correctness(
+    requests, wait_before, timeout, ttl, data_size
+):
     if requests <= 0:
         raise ValueError("Should be at least 1 request")
     if wait_before < 0 or timeout < 0 or data_size < 0:
@@ -129,8 +169,12 @@ def check_address_for_correctness(address, port):
     for part in parts:
         try:
             if int(part) < 1 or int(part) > 255:
-                raise WrongAddressException(f"Wrong address {part} in {address}")
+                raise WrongAddressException(
+                    f"Wrong address {part} in {address}"
+                )
         except ValueError:
-            raise WrongAddressException(f"Address {address} must consist of numbers")
+            raise WrongAddressException(
+                f"Address {address} must consist of numbers"
+            )
     if port < 0 or port > 65536:
         raise WrongAddressException("Port should be between 0 and 65536")
